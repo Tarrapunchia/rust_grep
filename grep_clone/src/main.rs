@@ -1,6 +1,7 @@
 use std::{fs::File, io::{BufRead, BufReader}};
 use clap::Parser;
 use anyhow::{Context, Result};
+use colored::*;
 
 #[derive(Debug)]
 struct CustomError(String);
@@ -31,7 +32,10 @@ fn find_pattern_in_line(reader: &mut BufReader<File>, pattern: &str, mut writer:
     let mut  counter = 21;
     while reader.read_line(&mut buffer)? != 0 {
         if buffer.contains(pattern) {
-            buffer = buffer.trim_end_matches('\n').to_string();
+            buffer = buffer
+                .trim_end_matches('\n')
+                .to_string()
+                .replace(pattern, &format!("{}", pattern.red()));
             writeln!(writer, "# \"{pattern}\" found at line [{counter}]:\n\t\"{buffer}\"")?;
             return Ok(());
         }
