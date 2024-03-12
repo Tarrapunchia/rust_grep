@@ -1,0 +1,15 @@
+[package]
+name = "grep_clone"
+version = "0.1.0"
+authors = ["Fabio Zucconi <f.zuc87@gmail.com>"]
+edition = "2021"
+description = "Simple grep_clone, works on any file"
+repository = "https://github.com/Tarrapunchia/rust_grep"
+keywords = ["cli", "terminal", "parsing", "string", "file"]
+categories = ["command-line-utilities"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.81"
+clap = { version = "4.0", features = ["derive"] }
