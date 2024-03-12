@@ -6,6 +6,14 @@ A simple grep clone implemented in rust.
 
 ## Installation
 
+#### Install Rustc/Cargo
+##### Linux or Wsl
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+##### Other OS
+Visit [Rust Official Website](https://forge.rust-lang.org/infra/other-installation-methods.html)
+
 #### Enter project directory
 ```bash
 cd /src
@@ -14,7 +22,11 @@ cd /src
 ```bash
 cargo build --release
 ```
-    
+The executable will be found in:
+```bash
+target/release
+```
+
 ## Usage/Examples
 
 ```bash
