@@ -27,16 +27,26 @@ Path:           "path_to_file"
 # "pattern" found at line [n]:
         "[...]pattern[...]"
 ```
-else
+
+For searching multiple patterns use '\|' to separate them inside the same argument passed to the function, as in grep:
+```bash
+./grep_clone "pattern1\|pattern2\|..." path_to_file
+```
+The output it's slightly different, more grep-y, since the single pattern output could result confusing for multiple outputs:
 ```bash
 Pattern:        "pattern"
 Path:           "path_to_file"
-# "pattern" not found in this document.
+
+        "[...]pattern1[...]pattern2[...]"
 ```
+
 
 It automatically ensures if errors occur while executing and reports them in the stdout.
 
 ## Roadmap
 
-- Implementing grep flags
-- Adding test cases
+- Make it work for one pattern ✅
+- Add colouring of the pattern searched inside the line printed ✅
+- Multiple patterns search ✅
+- Implementing grep flags ❌
+- Adding test cases ❌
