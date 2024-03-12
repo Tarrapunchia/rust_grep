@@ -40,4 +40,3 @@ It automatically ensures if errors occur while executing and reports them in the
 
 - Implementing grep flags
 - Adding test cases
-- Implement the search of multiple patterns separated by'\\|'
