@@ -27,21 +27,67 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn find_pattern_in_line(reader: &mut BufReader<File>, pattern: &str, mut writer: impl std::io::Write) -> Result<()> {
+/// Finds the patterns in the file, reading line by line
+fn find_pattern_in_line(reader: &mut BufReader<File>,
+                        pattern: &str,
+                        mut writer: impl std::io::Write) 
+                        -> Result<()>
+{
+    let patterns = check_for_mult_patters(pattern);
     let mut buffer = String::new();
-    let mut  counter = 21;
-    while reader.read_line(&mut buffer)? != 0 {
-        if buffer.contains(pattern) {
-            buffer = buffer
-                .trim_end_matches('\n')
-                .to_string()
-                .replace(pattern, &format!("{}", pattern.red()));
-            writeln!(writer, "# \"{pattern}\" found at line [{counter}]:\n\t\"{buffer}\"")?;
-            return Ok(());
+    let mut counter = 1;
+    let mut flag = false;
+
+    match patterns {
+        Multi::One(pattern) => {
+            while reader.read_line(&mut buffer)? != 0 {
+                if buffer.contains(pattern) {
+                    buffer = buffer
+                        .trim_end_matches('\n')
+                        .to_string()
+                        .replace(pattern, &format!("{}", pattern.red()));
+                    writeln!(writer, "# \"{pattern}\" found at line [{counter}]:\n\t\"{buffer}\"")?;
+                }
+                counter += 1;
+                buffer = String::from("");
+            }
         }
-        buffer = String::from("");
-        counter += 1;
+        Multi::Two(patterns) => {
+            while reader.read_line(&mut buffer)? != 0 {
+                for pattern in &patterns {
+                    if buffer.contains(pattern) {
+                        flag = true;
+                        buffer = buffer
+                            .trim_end_matches('\n')
+                            .to_string()
+                            .replace(pattern, &format!("{}", pattern.red()));
+                    }
+                    if flag == true {
+                        writeln!(writer, "#\t{buffer}")?;
+                        flag = false;
+                    }
+                }
+                buffer = String::from("");
+            }
+        }
     }
-    writeln!(writer, "# \"{pattern}\" not found in this document.")?;
     Ok(())
+}
+
+/// Enum for conditional returning of the function below
+enum Multi<'a> {
+    One(&'a str),
+    Two(Vec<&'a str>),
+}
+
+/// Checks if the pattern in input is multiple or not and returns an enum
+/// conditionally: &str or Vec<&str>
+fn check_for_mult_patters(pattern: &str) -> Multi {
+    // let mut mult<str> = Vec::new();
+    if pattern.contains("\\|") {
+        let mult: Vec<&str> = pattern.split("\\|").collect();
+        Multi::Two(mult)
+    } else {
+        Multi::One(pattern)
+    }
 }
